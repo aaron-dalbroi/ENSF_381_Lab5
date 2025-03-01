@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lab5 - Exercise 3</title>
+</head>
+<body>
+	<input type="text" id="textInput" placeholder="Enter User ID..."/>
+	<label id="textLabel"></label>
+	<button id="redButton">Red</button>
+	<button id="blueButton">Blue</button>
+	<button id="greenButton">Green</button>
+	<button id="orangeButton">Orange</button>
+	<button id="purpleButton">Purple</button>
+	
+	<script type="text/javascript">
+		const API_URL = "https://67c2039061d8935867e520b8.mockapi.io/user_api"; 
+		
+		const textInput = document.getElementById('textInput');
+		const textLabel = document.getElementById('textLabel');
+		const redButton = document.getElementById('redButton');
+		const blueButton = document.getElementById('blueButton');
+		const greenButton = document.getElementById('greenButton');
+		const orangeButton = document.getElementById('orangeButton');
+		const purpleButton = document.getElementById('purpleButton');
+		
+		async function retrieveData() {
+			try {
+				const response = await fetch(API_URL);
+				const users = await response.json();
+				console.log("API Data:", users);
+				
+				const enteredId = textInput.value.trim();
+				if (!enteredId) return;
+				
+				let userFound = false;
+				for (let user of users) {
+					if (user.id === enteredId) {
+						textLabel.innerHTML = `ID: ${user.id}, Name: ${user.first_name}, Group: ${user.user_group}`;
+						userFound = true;
+						break;
+					}
+				}
+				
+				if (!userFound) {
+					textLabel.innerHTML = "No users were found with the provided User_ID.";
+				}
+				
+			} catch (error) {
+				console.error("Error fetching data:", error);
+				textLabel.innerHTML = "Error retrieving data. Please try again.";
+			}
+		}
+		
+		textInput.addEventListener('keypress', function(event) {
+			if (event.key === 'Enter') {
+				retrieveData();
+			}
+		});
+		
+		function changeColor(color) {
+			textLabel.style.color = color;
+		}
+		
+		redButton.addEventListener('click', () => changeColor('red'));
+		blueButton.addEventListener('click', () => changeColor('blue'));
+		greenButton.addEventListener('click', () => changeColor('green'));
+		orangeButton.addEventListener('click', () => changeColor('orange'));
+		purpleButton.addEventListener('click', () => changeColor('purple'));
+	</script>
+</body>
+</html>
